@@ -25,6 +25,11 @@ def analytics():
     total_questions = profile.get_total_questions()
     calendar_info = profile.get_profile_calendar()
 
+    solved_data = profile.get_solved_questions()
+    solved_questions = solved_data["data"]["recentAcSubmissionList"]
+
+
+
 
     calendar, solved_difficulty, streak = analytics.overall_progress(
         problem_stats,
@@ -38,6 +43,11 @@ def analytics():
         problem_stats
     )
 
+    difficulty_by_topic = analytics.difficulty_by_topic(
+        total_questions,
+        solved_questions
+    )
+
 
 
     return render_template(
@@ -46,7 +56,9 @@ def analytics():
         difficulty_proportions=difficulty_proportions,
         difficulty=solved_difficulty,
         topic_proportions=topic_proportions,
-        streak=streak
+        streak=streak,
+        questions_by_day=calendar,
+        difficulty_by_topic=difficulty_by_topic
     )
 
 

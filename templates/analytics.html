@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <h1>LeetCode Analytics</h1>
 
 <p>Easy solved: {{ difficulty["Easy"] }}</p>
@@ -18,6 +23,97 @@
                 datasets: [{
                     data: Object.values(difficulty)
                 }]
+            }
+        }
+    );
+</script>
+
+<h2>Questions Solved Per Day</h2>
+
+<canvas id="questionsByDayChart"></canvas>
+
+<script>
+    const questionsByDay = {{ questions_by_day | tojson }};
+
+    const sortedEntries = Object.entries(questionsByDay).sort(
+        ([dateA], [dateB]) => {
+
+            const [dayA, monthA, yearA] = dateA.split("/");
+            const [dayB, monthB, yearB] = dateB.split("/");
+
+            const a = new Date(yearA, monthA - 1, dayA);
+            const b = new Date(yearB, monthB - 1, dayB);
+
+            return a - b;
+        }
+    );
+
+    const dates = sortedEntries.map(([date, count]) => date);
+    const counts = sortedEntries.map(([date, count]) => count);
+
+    new Chart(
+        document.getElementById("questionsByDayChart"),
+        {
+            type: "line",
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: "Questions Solved",
+                    data: counts
+                }]
+            }
+        }
+    );
+</script>
+
+<h2>Difficulty by Topic</h2>
+
+<canvas id="difficultyByTopicChart"></canvas>
+
+<script>
+    const difficultyByTopic = {{ difficulty_by_topic | tojson }};
+
+    const topics = Object.keys(difficultyByTopic);
+
+    const easy = topics.map(topic => difficultyByTopic[topic]["Easy"]);
+    const medium = topics.map(topic => difficultyByTopic[topic]["Medium"]);
+    const hard = topics.map(topic => difficultyByTopic[topic]["Hard"]);
+
+    new Chart(
+        document.getElementById("difficultyByTopicChart"),
+        {
+            type: "bar",
+
+            data: {
+                labels: topics,
+
+                datasets: [
+                    {
+                        label: "Easy",
+                        data: easy
+                    },
+                    {
+                        label: "Medium",
+                        data: medium
+                    },
+                    {
+                        label: "Hard",
+                        data: hard
+                    }
+                ]
+            },
+
+            options: {
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+
+                    y: {
+                        stacked: true,
+                        beginAtZero: true
+                    }
+                }
             }
         }
     );

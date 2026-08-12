@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE
+.vscode/
+
+# Cached data
+all_questions.json
+data/problems.json
+
+.vscode/
+README.md
+all_questions.json
+data/
+services/__pycache__/
+test_api.py

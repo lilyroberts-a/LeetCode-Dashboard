@@ -108,6 +108,27 @@ class LeetCodeAPI:
         }
 
         return self._query(query, variables)
+        
+    def get_solved_questions(self):
+
+        query = """
+        query getACSubmissions($username: String!, $limit: Int) {
+            recentAcSubmissionList(username: $username, limit: $limit) {
+                title
+                titleSlug
+                timestamp
+                statusDisplay
+                lang
+            }
+        }
+        """
+
+        variables = {
+            "username": self.username,
+            "limit": 100
+        }
+
+        return self._query(query, variables)
 
     def get_profile_calendar(self):
         query = """
