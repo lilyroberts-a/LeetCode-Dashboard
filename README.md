@@ -9,7 +9,6 @@ A Flask web application that connects to the LeetCode API to analyse and visuali
 - Overall questions solved
 - Easy, Medium and Hard breakdown
 - Questions solved per day
-- Solving streak
 - Topic progress
 - Difficulty by topic
 - Solved vs unsolved questions
