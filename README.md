@@ -25,7 +25,13 @@ A Flask web application that connects to the LeetCode API to analyse and visuali
 
 ## How It Works
 
-The application retrieves LeetCode data through the API and processes it using Python. The results are passed to the Flask frontend and displayed using interactive Chart.js visualisations.
+The application uses the LeetCode GraphQL API to retrieve user and problem data, including solved questions, difficulty levels, topic tags, submission history and streak information.
+
+The data is processed using Python and displayed through interactive Chart.js visualisations.
+
+## API
+
+This project uses the [LeetCode GraphQL API](https://github.com/akarsh1995/leetcode-graphql-queries) to retrieve data from LeetCode.
 
 ## Installation
 
