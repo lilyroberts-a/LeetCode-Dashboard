@@ -9,26 +9,32 @@ class QuestionAnalytics:
         self.username = username
 
     def datetime_conversion(self, problems_by_day):
+
         calendar = {}
 
         for timestamp in problems_by_day:
-            date = datetime.fromtimestamp(int(timestamp)).strftime("%d/%m/%Y")
-            calendar[date] = problems_by_day[timestamp]
+            date_string = datetime.fromtimestamp(
+                int(timestamp)
+            ).strftime("%d/%m/%Y")
+
+            calendar[date_string] = problems_by_day[timestamp]
 
         if calendar:
-            start_date = datetime.strptime(
-                min(calendar.keys(), key=lambda x: datetime.strptime(x,"%d/%m/%Y")),
-            "%d/%m/%Y"
-            )
 
-            end_date = datetime.strptime(
-                max(calendar.keys(), key=lambda x: datetime.strptime(x, "%d/%m/%Y")),
+            start_date = datetime.strptime(
+                min(
+                    calendar.keys(),
+                    key=lambda x: datetime.strptime(x, "%d/%m/%Y")
+                ),
                 "%d/%m/%Y"
-            )
+            ).date()
+
+            end_date = datetime.today().date()
 
             current_date = start_date
 
             while current_date <= end_date:
+
                 date_string = current_date.strftime("%d/%m/%Y")
 
                 if date_string not in calendar:
@@ -36,13 +42,10 @@ class QuestionAnalytics:
 
                 current_date += timedelta(days=1)
 
-        # Make sure dates are in chronological order
         calendar = dict(sorted(
             calendar.items(),
             key=lambda x: datetime.strptime(x[0], "%d/%m/%Y")
         ))
-
-
 
         return calendar
 

@@ -3,26 +3,75 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
+
 <h1>LeetCode Analytics</h1>
 
-<p>Easy solved: {{ difficulty["Easy"] }}</p>
-<p>Medium solved: {{ difficulty["Medium"] }}</p>
-<p>Hard solved: {{ difficulty["Hard"] }}</p>
+<p>All solved: {{ difficulty["All"] }} / {{ total_questions }}</p>
+<p>Easy solved: {{ difficulty["Easy"] }} / {{ difficulty_counts["Easy"] }}</p>
+<p>Medium solved: {{ difficulty["Medium"] }} / {{ difficulty_counts["Medium"] }}</p>
+<p>Hard solved: {{ difficulty["Hard"] }} / {{ difficulty_counts["Hard"] }}</p>
 
 <canvas id="difficultyChart"></canvas>
 
 <script>
     const difficulty = {{ difficulty | tojson }};
+    const difficultyCounts = {{ difficulty_counts | tojson }};
+    const totalQuestions = {{ total_questions }};
+
+    const difficulties = ["All", "Easy", "Medium", "Hard"];
+
+    const solved = [
+        difficulty["All"],
+        difficulty["Easy"],
+        difficulty["Medium"],
+        difficulty["Hard"]
+    ];
+
+    const totals = [
+        totalQuestions,
+        difficultyCounts["Easy"],
+        difficultyCounts["Medium"],
+        difficultyCounts["Hard"]
+    ];
+
+    const unsolvedDifficulty = totals.map((total, i) => total - solved[i]);
 
     new Chart(
         document.getElementById("difficultyChart"),
         {
             type: "bar",
+
             data: {
-                labels: Object.keys(difficulty),
-                datasets: [{
-                    data: Object.values(difficulty)
-                }]
+                labels: difficulties,
+
+                datasets: [
+                    {
+                        label: "Solved",
+                        data: solved,
+                        backgroundColor: "#4CAF50"
+                    },
+                    {
+                        label: "Unsolved",
+                        data: unsolvedDifficulty,
+                        backgroundColor: "white",
+                        borderColor: "black",
+                        borderWidth: 1
+                    }
+                ]
+            },
+
+            options: {
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+
+                    y: {
+                        stacked: true,
+                        beginAtZero: true
+                    }
+                }
             }
         }
     );
@@ -68,16 +117,30 @@
 
 <h2>Difficulty by Topic</h2>
 
+<p>
+    Topics attempted: {{ topics_solved }} / {{ total_topics }}
+</p>
+
 <canvas id="difficultyByTopicChart"></canvas>
 
 <script>
     const difficultyByTopic = {{ difficulty_by_topic | tojson }};
+    const topicCounts = {{ topic_counts | tojson }};
 
     const topics = Object.keys(difficultyByTopic);
 
     const easy = topics.map(topic => difficultyByTopic[topic]["Easy"]);
     const medium = topics.map(topic => difficultyByTopic[topic]["Medium"]);
     const hard = topics.map(topic => difficultyByTopic[topic]["Hard"]);
+
+    const unsolved = topics.map(topic => {
+        const solved =
+            difficultyByTopic[topic]["Easy"] +
+            difficultyByTopic[topic]["Medium"] +
+            difficultyByTopic[topic]["Hard"];
+
+        return topicCounts[topic] - solved;
+    });
 
     new Chart(
         document.getElementById("difficultyByTopicChart"),
@@ -90,15 +153,25 @@
                 datasets: [
                     {
                         label: "Easy",
-                        data: easy
+                        data: easy,
+                        backgroundColor: "#4CAF50"
                     },
                     {
                         label: "Medium",
-                        data: medium
+                        data: medium,
+                        backgroundColor: "#FFC107"
                     },
                     {
                         label: "Hard",
-                        data: hard
+                        data: hard,
+                        backgroundColor: "#F44336"
+                    },
+                    {
+                        label: "Unsolved",
+                        data: unsolved,
+                        backgroundColor: "white",
+                        borderColor: "black",
+                        borderWidth: 1
                     }
                 ]
             },

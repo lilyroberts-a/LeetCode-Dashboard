@@ -212,7 +212,9 @@ class LeetCodeAPI:
 
         if os.path.exists(cache_file):
             with open(cache_file, "r") as f:
-                return json.load(f)
+                all_questions = json.load(f)
+
+            return all_questions, len(all_questions)
 
         query = """
         query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {
@@ -224,15 +226,15 @@ class LeetCodeAPI:
         ) {
             total: totalNum
             questions: data {
-            acRate
-            difficulty
-            isFavor
-            status
-            title
-            titleSlug
-            topicTags {
-                name
-            }
+                acRate
+                difficulty
+                isFavor
+                status
+                title
+                titleSlug
+                topicTags {
+                    name
+                }
             }
         }
         }
@@ -244,18 +246,16 @@ class LeetCodeAPI:
 
         while True:
 
-        
             variables = {
                 "categorySlug": "",
                 "skip": skip,
                 "limit": limit,
-                "filters":{}
+                "filters": {}
             }
 
             response = self._query(query, variables)
 
             data = response["data"]["problemsetQuestionList"]
-
             questions = data["questions"]
 
             all_questions.extend(questions)
@@ -265,7 +265,7 @@ class LeetCodeAPI:
 
             skip += limit
 
-            with open(cache_file, "w") as f:
-                json.dump(all_questions, f)
+        with open(cache_file, "w") as f:
+            json.dump(all_questions, f)
 
-        return all_questions
+        return all_questions, data["total"]

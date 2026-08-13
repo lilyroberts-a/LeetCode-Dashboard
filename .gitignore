@@ -9,13 +9,9 @@ venv/
 # IDE
 .vscode/
 
-# Cached data
-all_questions.json
-data/problems.json
-
-.vscode/
-README.md
+# Cached Data
 all_questions.json
 data/
-services/__pycache__/
+
+# Tests
 test_api.py
